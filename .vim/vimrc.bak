@@ -1,0 +1,106 @@
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" "
+" "               ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
+" "               ██║   ██║██║████╗ ████║██╔══██╗██╔════╝
+" "               ██║   ██║██║██╔████╔██║██████╔╝██║
+" "               ╚██╗ ██╔╝██║██║╚██╔╝██║██╔══██╗██║
+" "                ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
+" "                 ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
+" "
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'dense-analysis/ale'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+" Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+" Plugin 'L9'
+" Git plugin not hosted on GitHub
+" Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+" Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Install L9 and avoid a Naming conflict if you've already installed a
+" different version somewhere else.
+" Plugin 'ascenator/L9', {'name': 'newL9'}
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+" packadd! ale
+
+syntax on
+" filetype plugin indent on
+set number
+set cursorline
+"autocmd filetype python setlocal colorcolumn=80
+"autocmd filetype fortran setlocal colorcolumn=80,133
+autocmd filetype python match ColorColumn "\%>79v.\+"
+autocmd filetype fortran match ColorColumn "\%>132v.\+"
+"highlight ColorColumn ctermbg=0 guibg=lightgrey
+set shiftwidth=4 smarttab
+set tabstop=4 softtabstop=0
+set expandtab
+set nowrap
+
+let g:ale_sign_error = '☢️'
+let g:ale_sign_warning = '⚡'
+
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+    return l:counts.total == 0 ? 'OK' : printf(
+        \   '%d⨉ %d⚠ ',
+        \   all_non_errors,
+        \   all_errors
+        \)
+endfunction
+set statusline+=%=
+set statusline+=\ %{LinterStatus()}
+
+" let g:ale_echo_msg_error_str = 'E'
+" let g:ale_echo_msg_warning_str = 'W'
+" let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+let g:ale_completion_autoimport = 1
+let g:ale_completion_enabled = 1
+let g:ale_linters = {
+\   'python': ['pylint'],
+\   'fortran': ['gcc', 'fortls'],
+\}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'python': ['black', 'isort']
+\}
+
+"leg g:ale_set_ballons = 1
+let g:ale_hover_cursor = 1
+let g:ale_fix_on_save = 1

@@ -1,0 +1,36 @@
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" "
+" "               ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
+" "               ██║   ██║██║████╗ ████║██╔══██╗██╔════╝
+" "               ██║   ██║██║██╔████╔██║██████╔╝██║
+" "               ╚██╗ ██╔╝██║██║╚██╔╝██║██╔══██╗██║
+" "                ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
+" "                 ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
+" "
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set nocompatible
+" filetype off
+
+syntax on
+filetype plugin indent on
+set number
+autocmd filetype python match ColorColumn "\%>79v.\+"
+autocmd filetype fortran match ColorColumn "\%>132v.\+"
+set shiftwidth=4 smarttab
+set tabstop=4 softtabstop=0
+set expandtab
+set nowrap
+
+" YouCompleteMe configuration options
+let g:ycm_language_server =
+    \[
+    \   {
+    \       'name': 'fortls',
+    \       'cmdline': ['fortls', '--hover_language', 'fortran', '--notify_init', '--hover_signature', '--use_signature_help'],
+    \       'filetypes': ['fortran'],
+    \       'project_root_files': ['.fortls'],
+    \   },
+    \]
+nmap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
+nmap <leader>yfd <Plug>(YCMFindSymbolInDocument)
