@@ -1,0 +1,1 @@
+alias st='speedtest --secure'
