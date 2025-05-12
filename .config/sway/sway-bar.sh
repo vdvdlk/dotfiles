@@ -1,1 +1,0 @@
-while date +'%Y-%m-%d %H:%M %p'; do sleep 1; done
